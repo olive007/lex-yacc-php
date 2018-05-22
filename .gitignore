@@ -1,0 +1,12 @@
+#*#
+*~
+*.sublime-workspace
+*.o
+*.so
+.~*#
+.DS_Store
+.build
+.Trash-1000
+vendor/*
+cache/*
+composer.lock
