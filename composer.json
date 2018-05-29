@@ -1,0 +1,24 @@
+{
+    "name": "devolive/lex-yacc-php",
+    "description": "php implementation for lex and yacc",
+    "authors": [
+        {
+            "name": "SECRET Olivier",
+            "email": "info@devolive.be"
+        }
+    ],
+    "license": "GPU",
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">= 7.1"
+    },
+    "autoload": {
+    	"psr-0": {
+    	    "Devolive": "src",
+            "": "test/src"
+       }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7"
+    }
+}
