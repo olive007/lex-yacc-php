@@ -53,13 +53,6 @@ class Symbol {
 
 
 	// Method
-	public function __toString() : string {
-		$res = $this->name." ";
-		$res .= $this->isTerminal() ? "(term)" : "(nTerm)";
-
-		return $res;
-	}
-
 	public function addAppearanceIndex(int $productionIndex) {
 		array_push($this->productionAppearance, $productionIndex);
 	}

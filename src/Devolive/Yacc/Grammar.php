@@ -65,6 +65,8 @@ class Grammar {
 		if ($this->startingRuleName == NULL) {
 			throw new GrammarException("No starting rule defined");
 		}
+
+		new Symbol('$end', $this);
 	}
 
 

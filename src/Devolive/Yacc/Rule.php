@@ -45,15 +45,5 @@ class Rule extends Symbol {
 		return $this->grammar->getProduction($this->productionIndexes[$index]);
 	}
 
-	public function getFirstTerminals() : array {
-
-		$res = [];
-
-		for ($i = $this->getNbrProduction(); --$i >= 0; ) {
-			$res = array_unique(array_merge($res, $this->getProduction($i)->getFirstTerminals()));
-		}
-
-		return $res;
-	}
 
 }

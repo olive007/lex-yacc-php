@@ -52,6 +52,10 @@ class Production {
 		return $this->index;
 	}
 
+	public function getName() : string {
+		return $this->rule->getName();
+	}
+
 	public function getDefinition() : string {
 		return $this->definition;
 	}
@@ -62,39 +66,6 @@ class Production {
 
 	public function getSymbol(int $index) : Symbol {
 		return $this->grammar->getSymbol($this->symbolIds[$index]);
-	}
-
-	public function getFirstTerminals() : array {
-		if ($this->firstTerminals == NULL) {
-			$this->setFirstTerminals();
-		}
-		return $this->firstTerminals;
-	}
-
-	// Setter
-	public function setFirstTerminals() {
-
-		$sym = $this->getSymbol(0);
-
-		if ($sym->isTerminal()) {
-			$this->firstTerminals = [$sym];
-		}
-		else {
-			$this->firstTerminals = [];// $this->grammar->getSymbol($sym->getId())->getFirstTerminals();
-			/*while (TRUE) {
-				$changed = FALSE;
-				$tmp = $sym->getFirstTerminals();
-				foreach ($tmp as $t) {
-					if (!in_array($t, $this->firstTerminals)) {
-						array_push($this->firstTerminals, $t);
-						$changed = TRUE;
-					}
-				}
-				if (!$changed) {
-					break;
-				}
-			}*/
-		}
 	}
 
 }

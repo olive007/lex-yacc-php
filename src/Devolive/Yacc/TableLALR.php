@@ -7,7 +7,7 @@ class TableLALR {
 	// Attribute
 	private $grammar;
 	private $firstSymbols;
-	private $folowingSymbols;
+	private $followingSymbols;
 
 
 	// Constructor
@@ -17,7 +17,7 @@ class TableLALR {
 		// Initialise attribute
 		$this->grammar = $grammar;
 		$this->firstSymbols = $this->computeFirstSymbols($grammar);
-		//$this->folowingSymbols = $this->computeFolowingSymbols();
+		$this->followingSymbols = $this->computeFolowingSymbols($grammar);
 
 	}
 
@@ -35,6 +35,18 @@ class TableLALR {
 			$res = substr($res, 0, -2)."]";
 		}
 
+
+		$res .= "\n\nFollowing Symbols";
+
+		foreach ($this->followingSymbols as $key => $value) {
+			$res .= sprintf("\n%-20s: [", $key);
+
+			foreach ($value as $v) {
+				$res .= "'".$v->getId()."', ";
+			}
+			$res = substr($res, 0, -2)."]";
+		}
+
 		return $res."\n";
 	}
 
@@ -42,7 +54,6 @@ class TableLALR {
 		
 		$res = [];
 
-		// Terminal
 		foreach ($grammar->getSymbolKeys() as $key) {
 			if ($grammar->getSymbol($key)->isTerminal()) {
 				$res[$key] = [$grammar->getSymbol($key)];
@@ -51,7 +62,6 @@ class TableLALR {
 				$res[$key] = [];
 			}
 		}
-		//$this->firstSymbols['$end'] = ['$end'];
 
 		while (TRUE) {
 			$changed = FALSE;
@@ -72,23 +82,46 @@ class TableLALR {
 				break;
 			}
 		}
-/*
-		// No Terminal
-		// Initialize the empty set
-		for ($i = $this->grammar->getNbrNoTerminal(); --$i >= 0;) {
-			$nTerm = $this->grammar->getNoTerminal($i);
-			$this->firstSymbols[$nTerm] = [];
+
+		return $res;
+	}
+
+	private function computeFolowingSymbols($grammar) {
+
+		$res = [];
+
+		foreach ($grammar->getNoTerminalSymbolKeys() as $key) {
+			$res[$key] = [];
 		}
-		// Then propagate symbols until no change
+		$res[$grammar->getStartingRuleName()] = [$grammar->getSymbol('$end')];
+
 		while (TRUE) {
 			$changed = FALSE;
-			for ($i = $this->grammar->getNbrNoTerminal(); --$i >= 0;) {
-				$nTerm = $this->grammar->getNoTerminal($i);
-				foreach ($this->grammar->getRulesByName($nTerm) as $rule) {
-					foreach ($this->searchFirstNoTerminalSymbol($rule->getSymbols()) as $sym) {
-						if (!in_array($sym, $this->firstSymbols[$nTerm])) {
-							array_push($this->firstSymbols[$nTerm], $sym);
-							$changed = TRUE;
+
+			for ($i = $grammar->getNbrProduction(); --$i >= 1; ) {
+				$prod = $grammar->getProduction($i);
+				for ($j = $prod->getNbrSymbol(); --$j >= 0; ) {
+					$sym = $prod->getSymbol($j);
+					if (!$sym->isTerminal()) {
+						if ($prod->getNbrSymbol() > $j + 1) {
+							$first = $this->firstSymbols[$prod->getSymbol($j + 1)->getId()];
+						}
+						else {
+							$first = [];
+						}
+						foreach ($first as $tmp) {
+							if (!in_array($tmp, $res[$sym->getName()])) {
+								array_push($res[$sym->getName()], $tmp);
+								$changed = TRUE;
+							}
+						}
+						if (count($first) == 0 || $j == $prod->getNbrSymbol() - 1) {
+							foreach ($res[$prod->getName()] as $tmp) {
+								if (!in_array($tmp, $res[$sym->getId()])) {
+									array_push($res[$sym->getId()], $tmp);
+									$changed = TRUE;
+								}
+							}
 						}
 					}
 				}
@@ -96,96 +129,8 @@ class TableLALR {
 			if (!$changed) {
 				break;
 			}
-		}//*/
-
-		return $res;
-
-	}
-
-	private function computeFolowingSymbols() {
-
-		for ($i = $this->grammar->getNbrNoTerminal(); --$i >= 0; ) {
-			$nTerm = $this->grammar->getNoTerminal($i);
-			$this->folowingSymbols[$nTerm] = [];
 		}
 
-		$this->folowingSymbols[$this->grammar->getStartingRuleName()] = ['$end'];
-
-		while (TRUE) {
-			$folowingSymbolsAdded = FALSE;
-			for ($i = 1; $i < $this->grammar->getNbrRule(); $i++) {
-				$rule = $this->grammar->getRule($i);
-
-				for ($j = $rule->getNbrSymbol(); --$j >= 0; ) {
-					$sym = $rule->getSymbol($j);
-					//print_r($sym."\n");
-					if ($this->grammar->noTerminalPresent($sym)) {
-						$fst = $this->searchFirstNoTerminalSymbol($rule->getSymbols($j+1));
-						//print("\n\n".$rule->getName()."\n");
-						//print_r($rule->getSymbols($j+1));
-						//print_r($fst);
-						$hasempty = FALSE;
-						foreach ($fst as $s) {
-							if ($s != '<empty>' && !in_array($s, $this->folowingSymbols[$sym])) {
-								//print_r($this->folowingSymbols);
-								array_push($this->folowingSymbols[$sym], $s);
-								$folowingSymbolsAdded = TRUE;
-							}
-							if ($s == '<empty>') {
-								$hasempty = TRUE;
-							}
-						}
-						if ($hasempty || $i == $rule->getNbrSymbol() - 1) {
-							//print("Toto:".$sym.":".$rule->getNbrSymbol()."\n");
-							foreach ($this->folowingSymbols[$rule->getName()] as $s) {
-								
-								if (!in_array($s, $this->folowingSymbols[$sym])) {
-									array_push($this->folowingSymbols[$sym], $s);
-									$folowingSymbolsAdded = TRUE;
-								}
-							}
-						}
-					}
-				}
-			}
-			if (!$folowingSymbolsAdded) {
-				break;
-			}
-		}
-	}
-
-	private function searchFirstNoTerminalSymbol($symbols) : array {
-
-
-		if (count($symbols) == 0) {
-			return ["<empty>"];
-		}
-
-		$res = [];
-
-		foreach ($symbols as $sym) {
-			$x_produces_empty = FALSE;
-
-			# Add all the non-<empty> symbols of First[x] to the result.
-			foreach ($this->firstSymbols[$sym] as $s) {
-				if ($s == '<empty>') {
-					$x_produces_empty = TRUE;
-				}
-				else {
-					if (!in_array($s, $res)) {
-						array_push($res, $s);
-					}
-				}
-			}
-			if ($x_produces_empty) {
-				continue;
-			}
-			else {
-				break;
-			}
-		}
-		print("----------------\n");
-		print_r($res);
 		return $res;
 	}
 
