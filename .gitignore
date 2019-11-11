@@ -1,12 +1,18 @@
-#*#
+# Temporary files
 *~
+
+# Sublime text individual files
 *.sublime-workspace
-*.o
-*.so
-.~*#
+
+# MAC files
 .DS_Store
-.build
+
+# Linux trash
 .Trash-1000
-vendor/*
-cache/*
-composer.lock
+
+# JetBrain
+.idea
+
+# Ignore Root directories
+/vendor
+/cache

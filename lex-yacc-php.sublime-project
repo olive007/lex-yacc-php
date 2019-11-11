@@ -3,6 +3,7 @@
 	"folders":
 	[
 		{
+			"follow_symlink": true,
 			"path": ".",
 			"folder_exclude_patterns": [
 				".*",
@@ -16,5 +17,10 @@
 				"composer.lock"
 			]
 		}
-	]
+	],
+	"settings": {
+        "xdebug": {
+             "url": "http://localhost/",
+        }
+    }
 }

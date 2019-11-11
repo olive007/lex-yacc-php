@@ -2,6 +2,6 @@
 
 namespace Devolive\Exception;
 
-class LexerException extends LexYaccException {
+class LexYaccException extends \Exception {
 
 }

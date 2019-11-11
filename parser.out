@@ -1,0 +1,345 @@
+Created by PLY version 3.10 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> declarations
+Rule 1     declarations -> declaration
+Rule 2     declarations -> declarations declaration
+Rule 3     declaration -> NAME
+Rule 4     declaration -> NAME ( )
+Rule 5     declaration -> NAME ( value )
+Rule 6     declaration -> NAME ( variable )
+Rule 7     value -> INTEGER
+Rule 8     value -> FLOAT
+Rule 9     value -> STRING
+Rule 10    value -> object
+Rule 11    variable -> ID = value
+Rule 12    object_list -> ID : value
+Rule 13    object_list -> object_list , ID : value
+Rule 14    object -> { }
+Rule 15    object -> { object_list }
+
+Terminals, with rules where they appear
+
+(                    : 4 5 6
+)                    : 4 5 6
+,                    : 13
+:                    : 12 13
+=                    : 11
+FLOAT                : 8
+ID                   : 11 12 13
+INTEGER              : 7
+NAME                 : 3 4 5 6
+STRING               : 9
+error                : 
+{                    : 14 15
+}                    : 14 15
+
+Nonterminals, with rules where they appear
+
+declaration          : 1 2
+declarations         : 2 0
+object               : 10
+object_list          : 13 15
+value                : 5 11 12 13
+variable             : 6
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . declarations
+    (1) declarations -> . declaration
+    (2) declarations -> . declarations declaration
+    (3) declaration -> . NAME
+    (4) declaration -> . NAME ( )
+    (5) declaration -> . NAME ( value )
+    (6) declaration -> . NAME ( variable )
+
+    NAME            shift and go to state 3
+
+    declarations                   shift and go to state 1
+    declaration                    shift and go to state 2
+
+state 1
+
+    (0) S' -> declarations .
+    (2) declarations -> declarations . declaration
+    (3) declaration -> . NAME
+    (4) declaration -> . NAME ( )
+    (5) declaration -> . NAME ( value )
+    (6) declaration -> . NAME ( variable )
+
+    NAME            shift and go to state 3
+
+    declaration                    shift and go to state 4
+
+state 2
+
+    (1) declarations -> declaration .
+
+    NAME            reduce using rule 1 (declarations -> declaration .)
+    $end            reduce using rule 1 (declarations -> declaration .)
+
+
+state 3
+
+    (3) declaration -> NAME .
+    (4) declaration -> NAME . ( )
+    (5) declaration -> NAME . ( value )
+    (6) declaration -> NAME . ( variable )
+
+    NAME            reduce using rule 3 (declaration -> NAME .)
+    $end            reduce using rule 3 (declaration -> NAME .)
+    (               shift and go to state 5
+
+
+state 4
+
+    (2) declarations -> declarations declaration .
+
+    NAME            reduce using rule 2 (declarations -> declarations declaration .)
+    $end            reduce using rule 2 (declarations -> declarations declaration .)
+
+
+state 5
+
+    (4) declaration -> NAME ( . )
+    (5) declaration -> NAME ( . value )
+    (6) declaration -> NAME ( . variable )
+    (7) value -> . INTEGER
+    (8) value -> . FLOAT
+    (9) value -> . STRING
+    (10) value -> . object
+    (11) variable -> . ID = value
+    (14) object -> . { }
+    (15) object -> . { object_list }
+
+    )               shift and go to state 6
+    INTEGER         shift and go to state 9
+    FLOAT           shift and go to state 10
+    STRING          shift and go to state 11
+    ID              shift and go to state 13
+    {               shift and go to state 14
+
+    value                          shift and go to state 7
+    variable                       shift and go to state 8
+    object                         shift and go to state 12
+
+state 6
+
+    (4) declaration -> NAME ( ) .
+
+    NAME            reduce using rule 4 (declaration -> NAME ( ) .)
+    $end            reduce using rule 4 (declaration -> NAME ( ) .)
+
+
+state 7
+
+    (5) declaration -> NAME ( value . )
+
+    )               shift and go to state 15
+
+
+state 8
+
+    (6) declaration -> NAME ( variable . )
+
+    )               shift and go to state 16
+
+
+state 9
+
+    (7) value -> INTEGER .
+
+    )               reduce using rule 7 (value -> INTEGER .)
+    }               reduce using rule 7 (value -> INTEGER .)
+    ,               reduce using rule 7 (value -> INTEGER .)
+
+
+state 10
+
+    (8) value -> FLOAT .
+
+    )               reduce using rule 8 (value -> FLOAT .)
+    }               reduce using rule 8 (value -> FLOAT .)
+    ,               reduce using rule 8 (value -> FLOAT .)
+
+
+state 11
+
+    (9) value -> STRING .
+
+    )               reduce using rule 9 (value -> STRING .)
+    }               reduce using rule 9 (value -> STRING .)
+    ,               reduce using rule 9 (value -> STRING .)
+
+
+state 12
+
+    (10) value -> object .
+
+    )               reduce using rule 10 (value -> object .)
+    }               reduce using rule 10 (value -> object .)
+    ,               reduce using rule 10 (value -> object .)
+
+
+state 13
+
+    (11) variable -> ID . = value
+
+    =               shift and go to state 17
+
+
+state 14
+
+    (14) object -> { . }
+    (15) object -> { . object_list }
+    (12) object_list -> . ID : value
+    (13) object_list -> . object_list , ID : value
+
+    }               shift and go to state 18
+    ID              shift and go to state 20
+
+    object_list                    shift and go to state 19
+
+state 15
+
+    (5) declaration -> NAME ( value ) .
+
+    NAME            reduce using rule 5 (declaration -> NAME ( value ) .)
+    $end            reduce using rule 5 (declaration -> NAME ( value ) .)
+
+
+state 16
+
+    (6) declaration -> NAME ( variable ) .
+
+    NAME            reduce using rule 6 (declaration -> NAME ( variable ) .)
+    $end            reduce using rule 6 (declaration -> NAME ( variable ) .)
+
+
+state 17
+
+    (11) variable -> ID = . value
+    (7) value -> . INTEGER
+    (8) value -> . FLOAT
+    (9) value -> . STRING
+    (10) value -> . object
+    (14) object -> . { }
+    (15) object -> . { object_list }
+
+    INTEGER         shift and go to state 9
+    FLOAT           shift and go to state 10
+    STRING          shift and go to state 11
+    {               shift and go to state 14
+
+    value                          shift and go to state 21
+    object                         shift and go to state 12
+
+state 18
+
+    (14) object -> { } .
+
+    )               reduce using rule 14 (object -> { } .)
+    }               reduce using rule 14 (object -> { } .)
+    ,               reduce using rule 14 (object -> { } .)
+
+
+state 19
+
+    (15) object -> { object_list . }
+    (13) object_list -> object_list . , ID : value
+
+    }               shift and go to state 22
+    ,               shift and go to state 23
+
+
+state 20
+
+    (12) object_list -> ID . : value
+
+    :               shift and go to state 24
+
+
+state 21
+
+    (11) variable -> ID = value .
+
+    )               reduce using rule 11 (variable -> ID = value .)
+
+
+state 22
+
+    (15) object -> { object_list } .
+
+    )               reduce using rule 15 (object -> { object_list } .)
+    }               reduce using rule 15 (object -> { object_list } .)
+    ,               reduce using rule 15 (object -> { object_list } .)
+
+
+state 23
+
+    (13) object_list -> object_list , . ID : value
+
+    ID              shift and go to state 25
+
+
+state 24
+
+    (12) object_list -> ID : . value
+    (7) value -> . INTEGER
+    (8) value -> . FLOAT
+    (9) value -> . STRING
+    (10) value -> . object
+    (14) object -> . { }
+    (15) object -> . { object_list }
+
+    INTEGER         shift and go to state 9
+    FLOAT           shift and go to state 10
+    STRING          shift and go to state 11
+    {               shift and go to state 14
+
+    value                          shift and go to state 26
+    object                         shift and go to state 12
+
+state 25
+
+    (13) object_list -> object_list , ID . : value
+
+    :               shift and go to state 27
+
+
+state 26
+
+    (12) object_list -> ID : value .
+
+    }               reduce using rule 12 (object_list -> ID : value .)
+    ,               reduce using rule 12 (object_list -> ID : value .)
+
+
+state 27
+
+    (13) object_list -> object_list , ID : . value
+    (7) value -> . INTEGER
+    (8) value -> . FLOAT
+    (9) value -> . STRING
+    (10) value -> . object
+    (14) object -> . { }
+    (15) object -> . { object_list }
+
+    INTEGER         shift and go to state 9
+    FLOAT           shift and go to state 10
+    STRING          shift and go to state 11
+    {               shift and go to state 14
+
+    value                          shift and go to state 28
+    object                         shift and go to state 12
+
+state 28
+
+    (13) object_list -> object_list , ID : value .
+
+    }               reduce using rule 13 (object_list -> object_list , ID : value .)
+    ,               reduce using rule 13 (object_list -> object_list , ID : value .)
+

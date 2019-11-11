@@ -1,0 +1,16 @@
+version: '3'
+services:
+  web:
+    image: olive007/ubuntu-php-apache:18.04-7.2-2.4
+    environment:
+      XDEBUG_IDEKEY: PHPSTORM
+      XDEBUG_REMOTE_ENABLE: 1
+      XDEBUG_SHOW_ERROR_TRACE: 1
+      XDEBUG_REMOTE_AUTOSTART: 0
+      XDEBUG_FILE_LINK_FORMAT: phpstorm://open?%f:%l
+    ports:
+      - "80:80"
+      - "88:88"
+    volumes:
+      - .:/var/www/html
+      - ./apache.conf:/etc/apache2/sites-enabled/000-default.conf:ro

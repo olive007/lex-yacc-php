@@ -5,7 +5,6 @@
 //opcache_reset();
 
 require_once __DIR__.'/../../vendor/autoload.php';
-
 $parser = new AnnotationParser(new AnnotationLexer());
 
 print_r($parser->parse("@Get('test')"));

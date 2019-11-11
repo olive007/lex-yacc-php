@@ -2,6 +2,6 @@
 
 namespace Devolive\Exception;
 
-class GrammarException extends \Exception {
+class GrammarException extends LexYaccException {
 
 }
